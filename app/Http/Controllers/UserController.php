@@ -41,7 +41,6 @@ class UserController extends Controller
         $input = $request->all();
         $data = (object)$input;
         ProcessMail::dispatch($data);
-        dd("Email Sent");
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
