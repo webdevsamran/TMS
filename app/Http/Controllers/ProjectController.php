@@ -39,17 +39,19 @@ class ProjectController extends Controller
                 'name'=> 'required|min:10',
                 'manager'=> 'required',
                 'developer'=> 'required',
-                'documents'=> 'required',
                 'starting_date'=> 'required',
                 'ending_date'=>'required',
                 'description'=> 'required|min:20'
             ]
         );
-        $developers = implode(',',$request->developer);
+        if(is_array($request->developer)){
+            $developers = implode(',',$request->developer);
+        }
+        $developers = $request->developer;
         $files = [];
         if ($request->documents){
             foreach($request->documents as $file){
-                $file_name = time().rand(1,99).'.'.$file->extension();
+                $file_name = time().rand(1,99).'.'.$file->getClientOriginalExtension();
                 $file->move(public_path('projects'), $file_name);
                 $files[] = $file_name;
             }
@@ -80,37 +82,25 @@ class ProjectController extends Controller
         if((Auth::user()->role) != 2){
             return view('dashboard.dashboard');
         }
-        if($request->documents){
-            $request->validate(
-                [
-                    'name'=> 'required|min:10',
-                    'manager'=> 'required',
-                    'developer'=> 'required',
-                    'documents'=> 'required',
-                    'starting_date'=> 'required',
-                    'ending_date'=>'required',
-                    'status'=>'required',
-                    'description'=> 'required|min:20'
-                ]
-            );
-        }else{
-            $request->validate(
-                [
-                    'name'=> 'required|min:10',
-                    'manager'=> 'required',
-                    'developer'=> 'required',
-                    'starting_date'=> 'required',
-                    'ending_date'=>'required',
-                    'status'=> 'required',
-                    'description'=> 'required|min:20'
-                ]
-            );
+        $request->validate(
+            [
+                'name'=> 'required|min:10',
+                'manager'=> 'required',
+                'developer'=> 'required',
+                'starting_date'=> 'required',
+                'ending_date'=>'required',
+                'status'=>'required',
+                'description'=> 'required|min:20'
+            ]
+        );
+        if(is_array($request->developer)){
+            $developers = implode(',',$request->developer);
         }
-        $developers = implode(',',$request->developer);
+        $developers = $request->developer;
         $files = [];
         if ($request->documents){
             foreach($request->documents as $file){
-                $file_name = time().rand(1,99).'.'.$file->extension();
+                $file_name = time().rand(1,99).'.'.$file->getClientOriginalExtension();
                 $file->move(public_path('projects'), $file_name);
                 $files[] = $file_name;
             }
