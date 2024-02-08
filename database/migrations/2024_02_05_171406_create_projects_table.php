@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('developer');
             $table->date('starting_date');
             $table->date('ending_date');
-            $table->string('file');
+            $table->string('file')->nullable(true);
             $table->text('description');
             $table->timestamps();
         });
